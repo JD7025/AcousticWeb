@@ -1,9 +1,10 @@
 package com.acousticweb.controller;
 
-import com.acousticweb.dto.CrearMedicionRequest;
 import com.acousticweb.dto.DatoFrecuenciaRequest;
+import com.acousticweb.dto.MedicionRequest;
 import com.acousticweb.entity.DatoFrecuencia;
 import com.acousticweb.entity.Medicion;
+import com.acousticweb.repository.DatoFrecuenciaRepository;
 import com.acousticweb.repository.MedicionRepository;
 import com.acousticweb.service.MedicionService;
 import jakarta.validation.Valid;
@@ -17,8 +18,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MedicionController {
 
-    private final MedicionService medicionService;
     private final MedicionRepository medicionRepository;
+    private final DatoFrecuenciaRepository datoFrecuenciaRepository;
+    private final MedicionService medicionService;
 
     @GetMapping
     public List<Medicion> listar() {
@@ -26,14 +28,34 @@ public class MedicionController {
     }
 
     @GetMapping("/{id}")
-    public Medicion obtenerPorId(@PathVariable Long id) {
+    public Medicion obtener(@PathVariable Long id) {
         return medicionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Medición no encontrada."));
     }
 
     @PostMapping
-    public Medicion crear(@Valid @RequestBody CrearMedicionRequest request) {
+    public Medicion crear(@Valid @RequestBody MedicionRequest request) {
         return medicionService.crearMedicion(request);
+    }
+
+    @PutMapping("/{id}")
+    public Medicion actualizar(@PathVariable Long id, @RequestBody Medicion datos) {
+        Medicion existente = obtener(id);
+
+        existente.setNombre(datos.getNombre());
+        existente.setNivelSpl(datos.getNivelSpl());
+        existente.setFrecuenciaInicio(datos.getFrecuenciaInicio());
+        existente.setFrecuenciaFin(datos.getFrecuenciaFin());
+        existente.setRuidoAmbienteDb(datos.getRuidoAmbienteDb());
+        existente.setEstado(datos.getEstado());
+        existente.setObservaciones(datos.getObservaciones());
+
+        return medicionRepository.save(existente);
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminar(@PathVariable Long id) {
+        medicionRepository.deleteById(id);
     }
 
     @PostMapping("/{id}/datos")
@@ -46,6 +68,6 @@ public class MedicionController {
 
     @GetMapping("/{id}/datos")
     public List<DatoFrecuencia> obtenerDatos(@PathVariable Long id) {
-        return medicionService.obtenerDatos(id);
+        return datoFrecuenciaRepository.findByMedicionIdOrderByFrecuenciaHzAsc(id);
     }
 }

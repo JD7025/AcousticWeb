@@ -1,6 +1,6 @@
 package com.acousticweb.service;
 
-import com.acousticweb.dto.CrearMedicionRequest;
+import com.acousticweb.dto.MedicionRequest;
 import com.acousticweb.dto.DatoFrecuenciaRequest;
 import com.acousticweb.entity.*;
 import com.acousticweb.enums.EstadoMedicion;
@@ -14,15 +14,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MedicionService {
 
-    private final AppUserRepository userRepository;
+    private final AppUserRepository usuarioRepository;
     private final ParlanteRepository parlanteRepository;
     private final MicrofonoRepository microfonoRepository;
     private final SalaRepository salaRepository;
     private final MedicionRepository medicionRepository;
     private final DatoFrecuenciaRepository datoFrecuenciaRepository;
 
-    public Medicion crearMedicion(CrearMedicionRequest request) {
-        AppUser usuario = userRepository.findById(request.usuarioId())
+    public Medicion crearMedicion(MedicionRequest request) {
+        AppUser usuario = usuarioRepository.findById(request.usuarioId())
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
 
         Parlante parlante = parlanteRepository.findById(request.parlanteId())

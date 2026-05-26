@@ -2,7 +2,7 @@ package com.acousticweb.dto;
 
 import java.math.BigDecimal;
 
-public record FiltroEqResponse(
+public record FiltroEQResponse(
         String tipo,
         BigDecimal frecuenciaHz,
         BigDecimal gananciaDb,

@@ -1,11 +1,11 @@
 package com.acousticweb.service;
 
-import com.acousticweb.dto.AuthResponse;
+import com.acousticweb.dto.UsuarioResponse;
 import com.acousticweb.dto.LoginRequest;
 import com.acousticweb.dto.RegisterRequest;
 import com.acousticweb.entity.AppUser;
 import com.acousticweb.enums.RolUsuario;
-import com.acousticweb.repository.AppUserRepository;
+import com.acousticweb.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,48 +14,48 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final AppUserRepository userRepository;
+    private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthResponse register(RegisterRequest request) {
+    public UsuarioResponse register(RegisterRequest request) {
         String correoNormalizado = request.correo().trim().toLowerCase();
 
-        if (userRepository.existsByCorreo(correoNormalizado)) {
+        if (usuarioRepository.existsByCorreo(correoNormalizado)) {
             throw new IllegalArgumentException("Ya existe un usuario registrado con ese correo.");
         }
 
-        AppUser user = AppUser.builder()
+        AppUser usuario = AppUser.builder()
                 .nombre(request.nombre().trim())
                 .correo(correoNormalizado)
                 .passwordHash(passwordEncoder.encode(request.password()))
                 .rol(RolUsuario.USUARIO)
                 .build();
 
-        AppUser saved = userRepository.save(user);
+        AppUser guardado = usuarioRepository.save(usuario);
 
-        return new AuthResponse(
-                saved.getId(),
-                saved.getNombre(),
-                saved.getCorreo(),
-                saved.getRol().name()
+        return new UsuarioResponse(
+                guardado.getId(),
+                guardado.getNombre(),
+                guardado.getCorreo(),
+                guardado.getRol().name()
         );
     }
 
-    public AuthResponse login(LoginRequest request) {
+    public UsuarioResponse login(LoginRequest request) {
         String correoNormalizado = request.correo().trim().toLowerCase();
 
-        AppUser user = userRepository.findByCorreo(correoNormalizado)
+        AppUser usuario = usuarioRepository.findByCorreo(correoNormalizado)
                 .orElseThrow(() -> new IllegalArgumentException("Credenciales inválidas."));
 
-        if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
+        if (!passwordEncoder.matches(request.password(), usuario.getPasswordHash())) {
             throw new IllegalArgumentException("Credenciales inválidas.");
         }
 
-        return new AuthResponse(
-                user.getId(),
-                user.getNombre(),
-                user.getCorreo(),
-                user.getRol().name()
+        return new UsuarioResponse(
+                usuario.getId(),
+                usuario.getNombre(),
+                usuario.getCorreo(),
+                usuario.getRol().name()
         );
     }
 }

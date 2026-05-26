@@ -8,5 +8,5 @@ public record AnalisisResponse(
         BigDecimal preampRecomendado,
         String curvaObjetivo,
         String resumen,
-        List<FiltroEqResponse> filtros
+        List<FiltroEQResponse> filtros
 ) {}

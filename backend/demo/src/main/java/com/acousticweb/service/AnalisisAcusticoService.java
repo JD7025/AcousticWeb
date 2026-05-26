@@ -1,7 +1,7 @@
 package com.acousticweb.service;
 
 import com.acousticweb.dto.AnalisisResponse;
-import com.acousticweb.dto.FiltroEqResponse;
+import com.acousticweb.dto.FiltroEQResponse;
 import com.acousticweb.entity.DatoFrecuencia;
 import com.acousticweb.enums.TipoFiltroEQ;
 import com.acousticweb.repository.DatoFrecuenciaRepository;
@@ -30,7 +30,7 @@ public class AnalisisAcusticoService {
             throw new IllegalArgumentException("La medición no tiene datos de frecuencia.");
         }
 
-        List<FiltroEqResponse> filtros = new ArrayList<>();
+        List<FiltroEQResponse> filtros = new ArrayList<>();
         int orden = 1;
         BigDecimal mayorBoost = BigDecimal.ZERO;
 
@@ -47,7 +47,7 @@ public class AnalisisAcusticoService {
                     ganancia = MAX_CUT_DB;
                 }
 
-                filtros.add(new FiltroEqResponse(
+                filtros.add(new FiltroEQResponse(
                         TipoFiltroEQ.PEAK.name(),
                         frecuencia.setScale(2, RoundingMode.HALF_UP),
                         ganancia.setScale(2, RoundingMode.HALF_UP),
@@ -62,7 +62,7 @@ public class AnalisisAcusticoService {
                 if (boostNecesario.compareTo(BigDecimal.valueOf(10)) <= 0) {
                     BigDecimal ganancia = boostNecesario.min(MAX_BOOST_DB);
 
-                    filtros.add(new FiltroEqResponse(
+                    filtros.add(new FiltroEQResponse(
                             TipoFiltroEQ.PEAK.name(),
                             frecuencia.setScale(2, RoundingMode.HALF_UP),
                             ganancia.setScale(2, RoundingMode.HALF_UP),

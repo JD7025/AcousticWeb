@@ -5,7 +5,17 @@
             "name": "Spring Boot-AcousticWebApplication<demo>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "mainClass": "com.example.demo.AcousticWebApplication",
+            "mainClass": "com.acoustic.demo.AcousticWebApplication",
+            "projectName": "demo",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-AcousticWebApplication<demo>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.acousticweb.AcousticWebApplication",
             "projectName": "demo",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
